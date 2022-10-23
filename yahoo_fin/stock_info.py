@@ -52,15 +52,20 @@ def force_float(elt):
     
 def _convert_to_numeric(s):
 
+  try:
     if "M" in s:
         s = s.strip("M")
         return force_float(s) * 1_000_000
-    
-    if "B" in s:
+
+    elif "B" in s:
         s = s.strip("B")
         return force_float(s) * 1_000_000_000
     
-    return force_float(s)
+    else:
+      return force_float(s)
+
+  except:
+    pass
 
 
 def get_data(ticker, start_date = None, end_date = None, index_as_date = True,
