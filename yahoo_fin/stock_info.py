@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import ftplib
 import io
 import re
@@ -39,7 +40,6 @@ def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     params = {"period1": start_seconds, "period2": end_seconds,
               "interval": interval.lower(), "events": "div,splits"}
     
-    
     return site, params
 
 
@@ -52,20 +52,24 @@ def force_float(elt):
     
 def _convert_to_numeric(s):
 
-  try:
-    if "M" in s:
-        s = s.strip("M")
-        return force_float(s) * 1_000_000
+    if isinstance(s, str): #enforcing s being a string
+        if "M" in s:
+            s = s.strip("M")
+            out = force_float(s) * 1_000_000
 
-    elif "B" in s:
-        s = s.strip("B")
-        return force_float(s) * 1_000_000_000
-    
-    else:
-      return force_float(s)
+        elif "B" in s:
+            s = s.strip("B")
+            out = force_float(s) * 1_000_000_000
+            
+        elif "T" in s:
+            s = s.strip("T")
+            out = force_float(s) * 1_000_000_000_000            
 
-  except:
-    pass
+        else: #must not contain M or B
+            out = force_float(s)
+    else: 
+        out = np.nan
+    return out
 
 
 def get_data(ticker, start_date = None, end_date = None, index_as_date = True,
