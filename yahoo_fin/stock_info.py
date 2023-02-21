@@ -7,6 +7,11 @@ import re
 import json
 import datetime
 
+#headers for simple replication of requests
+headers = {"User-Agent":
+           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19582"
+           }
+
 try:
     from requests_html import HTMLSession
 except Exception:
@@ -73,8 +78,7 @@ def _convert_to_numeric(s):
 
 
 def get_data(ticker, start_date = None, end_date = None, index_as_date = True,
-             interval = "1d", headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-):
+             interval = "1d", headers = headers):
     '''Downloads historical stock price data into a pandas data frame.  Interval
        must be "1d", "1wk", "1mo", or "1m" for daily, weekly, monthly, or minute data.
        Intraday minute data is limited to 7 days.
@@ -236,7 +240,7 @@ def tickers_ibovespa(include_company_data = False):
 
 
 
-def tickers_nifty50(include_company_data = False, headers = {'User-agent': 'Mozilla/5.0'}):
+def tickers_nifty50(include_company_data = False, headers = headers):
 
     '''Downloads list of currently traded tickers on the NIFTY 50, India'''
 
@@ -288,7 +292,7 @@ def tickers_ftse250(include_company_data = False):
 
 
 
-def get_quote_table(ticker , dict_result = True, headers = {'User-agent': 'Mozilla/5.0'}): 
+def get_quote_table(ticker , dict_result = True, headers = headers): 
     
     '''Scrapes data elements found on Yahoo Finance's quote page 
        of input ticker
@@ -324,7 +328,7 @@ def get_quote_table(ticker , dict_result = True, headers = {'User-agent': 'Mozil
     return data    
     
     
-def get_stats(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
+def get_stats(ticker, headers = headers):
     
     '''Scrapes information from the statistics tab on Yahoo Finance 
        for an input ticker 
@@ -351,7 +355,7 @@ def get_stats(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
     return table
 
 
-def get_stats_valuation(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
+def get_stats_valuation(ticker, headers = headers):
     
     '''Scrapes Valuation Measures table from the statistics tab on Yahoo Finance 
        for an input ticker 
@@ -376,7 +380,7 @@ def get_stats_valuation(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
 
 
 
-def _parse_json(url, headers = {'User-agent': 'Mozilla/5.0'}):
+def _parse_json(url, headers = headers):
     html = requests.get(url=url, headers = headers).text
 
     json_str = html.split('root.App.main =')[1].split(
@@ -534,7 +538,7 @@ def get_financials(ticker, yearly = True, quarterly = True):
     return result
 
 
-def get_holders(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
+def get_holders(ticker, headers = headers):
     
     '''Scrapes the Holders page from Yahoo Finance for an input ticker 
     
@@ -557,7 +561,7 @@ def get_holders(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
                    
     return table_mapper       
 
-def get_analysts_info(ticker, headers = {'User-agent': 'Mozilla/5.0'}):
+def get_analysts_info(ticker, headers = headers):
     
     '''Scrapes the Analysts page from Yahoo Finance for an input ticker 
     
@@ -669,9 +673,7 @@ def get_top_crypto():
     return df
                     
         
-def get_dividends(ticker, start_date = None, end_date = None, index_as_date = True, 
-                  headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-):
+def get_dividends(ticker, start_date = None, end_date = None, index_as_date = True, headers = headers):
     '''Downloads historical dividend data into a pandas data frame.
     
        @param: ticker
@@ -722,9 +724,7 @@ def get_dividends(ticker, start_date = None, end_date = None, index_as_date = Tr
 
 
 
-def get_splits(ticker, start_date = None, end_date = None, index_as_date = True,
-               headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-):
+def get_splits(ticker, start_date = None, end_date = None, index_as_date = True, headers = headers):
     '''Downloads historical stock split data into a pandas data frame.
     
        @param: ticker
@@ -815,8 +815,7 @@ def get_earnings(ticker):
 
 
 ### Earnings functions
-def _parse_earnings_json(url, headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-):
+def _parse_earnings_json(url, headers = headers):
         resp = requests.get(url, headers = headers)
         
         content = resp.content.decode(encoding='utf-8', errors='strict')
@@ -920,7 +919,7 @@ def get_earnings_in_date_range(start_date, end_date):
         return earnings_data
 
 
-def get_currencies(headers = {'User-agent': 'Mozilla/5.0'}):
+def get_currencies(headers = headers):
     
     '''Returns the currencies table from Yahoo Finance'''
     
@@ -932,7 +931,7 @@ def get_currencies(headers = {'User-agent': 'Mozilla/5.0'}):
     return result
 
 
-def get_futures(headers = {'User-agent': 'Mozilla/5.0'}):
+def get_futures(headers = headers):
     
     '''Returns the futures table from Yahoo Finance'''
     
@@ -944,7 +943,7 @@ def get_futures(headers = {'User-agent': 'Mozilla/5.0'}):
     return result
 
 
-def get_undervalued_large_caps(headers = {'User-agent': 'Mozilla/5.0'}):
+def get_undervalued_large_caps(headers = headers):
     
     '''Returns the undervalued large caps table from Yahoo Finance'''
     
@@ -957,8 +956,7 @@ def get_undervalued_large_caps(headers = {'User-agent': 'Mozilla/5.0'}):
     return result
 
 
-def get_quote_data(ticker, headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-):
+def get_quote_data(ticker, headers = headers):
     
     '''Inputs: @ticker
     
@@ -968,8 +966,7 @@ def get_quote_data(ticker, headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Int
     
     site = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + ticker
     
-    resp = requests.get(site, headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-)
+    resp = requests.get(site, headers = headers)
     
     if not resp.ok:
         raise AssertionError("""Invalid response from server.  Check if ticker is
